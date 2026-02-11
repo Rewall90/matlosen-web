@@ -146,7 +146,7 @@ export async function approveProduct(gtin: string): Promise<void> {
     .from('products')
     .update({
       status: 'approved',
-      reviewed_by: 'admin', // Since we use password auth, all reviewers are "admin"
+      reviewed_by: null, // Password auth - no user UUID available
       reviewed_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })
