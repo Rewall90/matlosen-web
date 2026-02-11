@@ -19,6 +19,7 @@ export function Header({ showDownloadButton = true }: HeaderProps) {
             href="https://apps.apple.com/app/matlosen"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Last ned Matlosen (åpner App Store i nytt vindu)"
             className="bg-primary text-text-inverse px-p-button-x py-p-button-y rounded-button font-medium text-sm hover:bg-primary-dark transition-colors duration-default"
           >
             Last ned

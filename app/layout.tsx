@@ -21,6 +21,11 @@ export const metadata: Metadata = {
     locale: 'nb_NO',
     type: 'website',
   },
+  twitter: {
+    card: 'summary',
+    title: 'Matlosen - Spis renere. Lev bedre.',
+    description: 'Matlosen hjelper deg å finne ren mat uten ultraprosesserte tilsetningsstoffer.',
+  },
 }
 
 export default function RootLayout({
@@ -30,7 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="nb" className={outfit.variable}>
-      <body className={`${outfit.className} antialiased`}>
+      <body className="font-sans antialiased">
         {children}
       </body>
     </html>

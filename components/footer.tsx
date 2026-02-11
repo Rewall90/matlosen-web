@@ -11,7 +11,7 @@ export function Footer({ activeLink }: FooterProps) {
         <p className="text-text-muted text-sm">
           © 2025 Matlosen. Alle rettigheter reservert.
         </p>
-        <div className="flex gap-mb-heading-lg">
+        <div className="flex gap-gap-links">
           <Link
             href="/personvern"
             className={

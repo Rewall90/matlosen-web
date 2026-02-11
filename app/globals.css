@@ -62,3 +62,35 @@ body {
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
+/* =============================================================================
+   ACCESSIBILITY - Reduced Motion
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+    opacity: 1;
+  }
+
+  .animate-glow {
+    animation: none;
+  }
+
+  .animate-float {
+    animation: none;
+  }
+}
+
+/* =============================================================================
+   CUSTOM PROPERTIES - Using design tokens
+   ============================================================================= */
+
+:root {
+  --glow-gradient: radial-gradient(
+    circle,
+    rgb(42 157 143 / 0.4) 0%,
+    rgb(42 157 143 / 0.1) 50%,
+    transparent 70%
+  );
+}

@@ -8,7 +8,7 @@ export default function Home() {
       <div
         className="absolute w-[500px] h-[500px] rounded-full blur-[120px] animate-glow pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(42, 157, 143, 0.4) 0%, rgba(42, 157, 143, 0.1) 50%, transparent 70%)',
+          background: 'var(--glow-gradient)',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -60%)',
@@ -20,7 +20,7 @@ export default function Home() {
       <div className="relative z-10 text-center max-w-narrow">
         {/* App Icon */}
         <div className="animate-fade-up animate-delay-1">
-          <div className="w-24 h-24 bg-primary rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg animate-float">
+          <div className="w-icon-lg h-icon-lg bg-primary rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg animate-float">
             <span className="text-white font-bold text-4xl">M</span>
           </div>
         </div>
@@ -41,23 +41,23 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Footer */}
+      {/* Footer - minimal centered variant for landing page */}
       <footer className="absolute bottom-8 left-0 right-0 text-center animate-fade-up animate-delay-5">
-        <div className="flex items-center justify-center gap-6 text-sm text-text-muted">
+        <nav className="flex items-center justify-center gap-gap-links text-sm text-text-muted">
           <Link
             href="/personvern"
             className="hover:text-primary transition-colors duration-default"
           >
             Personvern
           </Link>
-          <span className="text-border">•</span>
+          <span className="text-border" aria-hidden="true">•</span>
           <Link
             href="/vilkar"
             className="hover:text-primary transition-colors duration-default"
           >
             Vilkår
           </Link>
-        </div>
+        </nav>
         <p className="text-xs text-text-muted mt-3">
           © 2025 Matlosen
         </p>

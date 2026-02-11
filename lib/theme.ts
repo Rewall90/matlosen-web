@@ -137,6 +137,7 @@ export const semanticSpacing = {
   'gap-section': spacing[12],   // Gap between section items (48px)
   'gap-content': spacing[8],    // Gap between content blocks (32px)
   'gap-items': spacing[4],      // Gap between small items (16px)
+  'gap-links': spacing[6],      // Gap between inline links (24px)
 
   // Text rhythm
   'mb-heading': spacing[4],     // Margin below headings (16px)
