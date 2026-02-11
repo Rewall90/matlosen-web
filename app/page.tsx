@@ -1,4 +1,4 @@
-import { Header, Footer, AppStoreButton } from '@/components'
+import { Header, Footer, AppStoreButton, PhoneMockup } from '@/components'
 
 export default function Home() {
   return (
@@ -6,8 +6,8 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-3xl mx-auto text-center">
+      <section className="pt-hero-top pb-section px-container">
+        <div className="max-w-content mx-auto text-center">
           {/* App Icon */}
           <div className="w-24 h-24 bg-primary/10 rounded-3xl mx-auto mb-8 flex items-center justify-center">
             {/* Placeholder - replace with actual app icon */}
@@ -26,18 +26,14 @@ export default function Home() {
 
           {/* Hero Phone Mockup */}
           <div className="mt-16 relative">
-            <div className="bg-surface rounded-[3rem] p-4 max-w-xs mx-auto shadow-lg border border-border">
-              <div className="bg-gray-200 rounded-[2.5rem] aspect-[9/19] flex items-center justify-center">
-                <span className="text-text-muted text-sm">Skjermbilde 1</span>
-              </div>
-            </div>
+            <PhoneMockup label="Skjermbilde 1" />
           </div>
         </div>
       </section>
 
       {/* Feature 1: Skann og sjekk */}
-      <section className="py-20 px-6 bg-surface">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <section className="py-section px-container bg-surface">
+        <div className="max-w-page mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold mb-4 text-text-primary">
               Skann og sjekk
@@ -46,21 +42,15 @@ export default function Home() {
               Skann strekkoden på et produkt og få umiddelbar oversikt over NOVA-score, Nutri-Score, og alle tilsetningsstoffer. Vit hva du spiser.
             </p>
           </div>
-          <div className="bg-white rounded-[3rem] p-4 max-w-xs mx-auto shadow-lg border border-border">
-            <div className="bg-gray-200 rounded-[2.5rem] aspect-[9/19] flex items-center justify-center">
-              <span className="text-text-muted text-sm">Skjermbilde 2</span>
-            </div>
-          </div>
+          <PhoneMockup label="Skjermbilde 2" variant="dark" />
         </div>
       </section>
 
       {/* Feature 2: Finn sunnere alternativer */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div className="order-2 md:order-1 bg-surface rounded-[3rem] p-4 max-w-xs mx-auto shadow-lg border border-border">
-            <div className="bg-gray-200 rounded-[2.5rem] aspect-[9/19] flex items-center justify-center">
-              <span className="text-text-muted text-sm">Skjermbilde 3</span>
-            </div>
+      <section className="py-section px-container">
+        <div className="max-w-page mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div className="order-2 md:order-1">
+            <PhoneMockup label="Skjermbilde 3" />
           </div>
           <div className="order-1 md:order-2">
             <h2 className="text-3xl font-bold mb-4 text-text-primary">
@@ -74,8 +64,8 @@ export default function Home() {
       </section>
 
       {/* Feature 3: Oppskrifter uten UPF */}
-      <section className="py-20 px-6 bg-surface">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <section className="py-section px-container bg-surface">
+        <div className="max-w-page mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold mb-4 text-text-primary">
               Oppskrifter uten UPF
@@ -84,16 +74,12 @@ export default function Home() {
               Utforsk hundrevis av oppskrifter laget med rene råvarer. Planlegg ukens måltider og generer handlelister automatisk.
             </p>
           </div>
-          <div className="bg-white rounded-[3rem] p-4 max-w-xs mx-auto shadow-lg border border-border">
-            <div className="bg-gray-200 rounded-[2.5rem] aspect-[9/19] flex items-center justify-center">
-              <span className="text-text-muted text-sm">Skjermbilde 4</span>
-            </div>
-          </div>
+          <PhoneMockup label="Skjermbilde 4" variant="dark" />
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6 text-center">
+      <section className="py-section px-container text-center">
         <h2 className="text-3xl font-bold mb-6 text-text-primary">
           Klar til å spise renere?
         </h2>

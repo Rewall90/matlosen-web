@@ -6,8 +6,8 @@ type FooterProps = {
 
 export function Footer({ activeLink }: FooterProps) {
   return (
-    <footer className="py-8 px-6 border-t border-border">
-      <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <footer className="py-8 px-container border-t border-border">
+      <div className="max-w-page mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="text-text-muted text-sm">
           © 2025 Matlosen. Alle rettigheter reservert.
         </p>
