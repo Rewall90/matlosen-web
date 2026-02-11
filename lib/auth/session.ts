@@ -50,10 +50,3 @@ export async function isAuthenticated(): Promise<boolean> {
   const session = cookieStore.get(SESSION_COOKIE_NAME)
   return !!session?.value
 }
-
-/**
- * Get the session token (for middleware)
- */
-export function getSessionCookieName(): string {
-  return SESSION_COOKIE_NAME
-}
