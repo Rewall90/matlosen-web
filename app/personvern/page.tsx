@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Header, Footer } from '@/components'
 
 export const metadata: Metadata = {
   title: 'Personvernerklæring - Matlosen',
@@ -9,23 +9,13 @@ export const metadata: Metadata = {
 export default function PrivacyPolicy() {
   return (
     <main className="min-h-screen">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-              <span className="text-primary font-bold text-lg">M</span>
-            </div>
-            <span className="font-semibold text-lg">Matlosen</span>
-          </Link>
-        </div>
-      </header>
+      <Header showDownloadButton={false} />
 
       {/* Content */}
       <article className="pt-32 pb-20 px-6">
         <div className="max-w-3xl mx-auto prose prose-lg">
           <h1 className="text-3xl font-bold mb-2 text-text-primary">Personvernerklæring</h1>
-          <p className="text-text-muted mb-8">Sist oppdatert: {new Date().toLocaleDateString('nb-NO', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p className="text-text-muted mb-8">Sist oppdatert: 11. februar 2025</p>
 
           <section className="mb-8">
             <h2 className="text-xl font-semibold mb-4 text-text-primary">1. Introduksjon</h2>
@@ -136,28 +126,7 @@ export default function PrivacyPolicy() {
         </div>
       </article>
 
-      {/* Footer */}
-      <footer className="py-8 px-6 border-t border-border">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-text-muted text-sm">
-            © {new Date().getFullYear()} Matlosen. Alle rettigheter reservert.
-          </p>
-          <div className="flex gap-6">
-            <Link
-              href="/personvern"
-              className="text-primary text-sm font-medium"
-            >
-              Personvernerklæring
-            </Link>
-            <Link
-              href="/vilkar"
-              className="text-text-secondary text-sm hover:text-primary transition-colors"
-            >
-              Bruksvilkår
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer activeLink="personvern" />
     </main>
   )
 }

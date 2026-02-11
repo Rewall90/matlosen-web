@@ -23,7 +23,7 @@ const config: Config = {
         border: '#e3e0dc',
       },
       fontFamily: {
-        sans: ['Outfit', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-outfit)', 'system-ui', 'sans-serif'],
       },
     },
   },

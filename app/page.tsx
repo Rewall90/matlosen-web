@@ -1,27 +1,9 @@
-import Image from 'next/image'
-import Link from 'next/link'
+import { Header, Footer, AppStoreButton } from '@/components'
 
 export default function Home() {
   return (
     <main className="min-h-screen">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-              {/* Placeholder for app icon */}
-              <span className="text-primary font-bold text-lg">M</span>
-            </div>
-            <span className="font-semibold text-lg">Matlosen</span>
-          </div>
-          <a
-            href="https://apps.apple.com/app/matlosen"
-            className="bg-primary text-white px-5 py-2.5 rounded-full font-medium text-sm hover:bg-primary-dark transition-colors"
-          >
-            Last ned
-          </a>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6">
@@ -40,19 +22,7 @@ export default function Home() {
             Matlosen hjelper deg å unngå ultraprosessert mat, finne sunnere alternativer, og lage rene oppskrifter for hele familien.
           </p>
 
-          {/* App Store Button */}
-          <a
-            href="https://apps.apple.com/app/matlosen"
-            className="inline-block"
-          >
-            <Image
-              src="/app-store-badge.svg"
-              alt="Last ned på App Store"
-              width={180}
-              height={60}
-              className="hover:opacity-80 transition-opacity"
-            />
-          </a>
+          <AppStoreButton />
 
           {/* Hero Phone Mockup */}
           <div className="mt-16 relative">
@@ -127,42 +97,10 @@ export default function Home() {
         <h2 className="text-3xl font-bold mb-6 text-text-primary">
           Klar til å spise renere?
         </h2>
-        <a
-          href="https://apps.apple.com/app/matlosen"
-          className="inline-block"
-        >
-          <Image
-            src="/app-store-badge.svg"
-            alt="Last ned på App Store"
-            width={180}
-            height={60}
-            className="hover:opacity-80 transition-opacity"
-          />
-        </a>
+        <AppStoreButton />
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 px-6 border-t border-border">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-text-muted text-sm">
-            © {new Date().getFullYear()} Matlosen. Alle rettigheter reservert.
-          </p>
-          <div className="flex gap-6">
-            <Link
-              href="/personvern"
-              className="text-text-secondary text-sm hover:text-primary transition-colors"
-            >
-              Personvernerklæring
-            </Link>
-            <Link
-              href="/vilkar"
-              className="text-text-secondary text-sm hover:text-primary transition-colors"
-            >
-              Bruksvilkår
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </main>
   )
 }
