@@ -33,6 +33,12 @@ Landing page and legal pages for the Matlosen app (matlosen.no).
 
 Phone mockups currently show gray placeholders. Replace with real app screenshots in the `<div>` elements in `app/page.tsx`.
 
+## Links
+
+- **Live**: https://matlosen.no
+- **Vercel**: https://vercel.com/petters-projects-11c97cd1/matlosen-web
+- **GitHub**: https://github.com/Rewall90/matlosen-web
+
 ## Related
 
 Mobile app repo: `../foodle` (being renamed to Matlosen)
