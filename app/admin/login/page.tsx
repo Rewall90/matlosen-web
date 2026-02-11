@@ -4,10 +4,28 @@ import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { login } from '@/lib/auth/session'
 
+/**
+ * Validate redirect URL to prevent open redirect attacks.
+ * Only allows relative paths starting with /admin.
+ */
+function getSafeRedirect(redirect: string | null): string {
+  if (!redirect) return '/admin'
+
+  // Must be a relative path starting with /admin
+  if (redirect.startsWith('/admin')) {
+    // Prevent protocol-relative URLs like //evil.com
+    if (!redirect.startsWith('//')) {
+      return redirect
+    }
+  }
+
+  return '/admin'
+}
+
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/admin'
+  const redirect = getSafeRedirect(searchParams.get('redirect'))
 
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')

@@ -89,7 +89,7 @@ export function ProductReviewForm({ product }: Props) {
         nutri_score: formData.nutri_score as NutriScore | null,
       })
       // Then approve
-      await approveProduct(product.gtin, 'admin')
+      await approveProduct(product.gtin)
       router.push('/admin')
       router.refresh()
     } catch (e) {
