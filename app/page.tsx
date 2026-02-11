@@ -1,92 +1,67 @@
-import { Header, Footer, AppStoreButton, PhoneMockup } from '@/components'
+import Link from 'next/link'
+import { AppStoreButton } from '@/components'
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
-      <Header />
+    <main className="min-h-screen flex flex-col items-center justify-center px-container relative overflow-hidden">
+      {/* Warm gradient glow - the memorable element */}
+      <div
+        className="absolute w-[500px] h-[500px] rounded-full blur-[120px] animate-glow pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(42, 157, 143, 0.4) 0%, rgba(42, 157, 143, 0.1) 50%, transparent 70%)',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -60%)',
+        }}
+        aria-hidden="true"
+      />
 
-      {/* Hero Section */}
-      <section className="pt-hero-top pb-section px-container">
-        <div className="max-w-content mx-auto text-center">
-          {/* App Icon */}
-          <div className="w-icon-lg h-icon-lg bg-primary/10 rounded-card mx-auto mb-mb-element flex items-center justify-center">
-            {/* Placeholder - replace with actual app icon */}
-            <span className="text-primary font-bold text-4xl">M</span>
+      {/* Content */}
+      <div className="relative z-10 text-center max-w-narrow">
+        {/* App Icon */}
+        <div className="animate-fade-up animate-delay-1">
+          <div className="w-24 h-24 bg-primary rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg animate-float">
+            <span className="text-white font-bold text-4xl">M</span>
           </div>
+        </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-mb-heading-lg text-text-primary">
-            Spis renere. Lev bedre.
-          </h1>
+        {/* App Name */}
+        <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-4 animate-fade-up animate-delay-2">
+          Matlosen
+        </h1>
 
-          <p className="text-lg md:text-xl text-text-secondary mb-mb-body max-w-narrow mx-auto">
-            Matlosen hjelper deg å unngå ultraprosessert mat, finne sunnere alternativer, og lage rene oppskrifter for hele familien.
-          </p>
+        {/* Tagline */}
+        <p className="text-xl md:text-2xl text-text-secondary mb-10 animate-fade-up animate-delay-3">
+          Spis renere. Lev bedre.
+        </p>
 
+        {/* App Store Button */}
+        <div className="animate-fade-up animate-delay-4">
           <AppStoreButton />
-
-          {/* Hero Phone Mockup */}
-          <div className="mt-section-sm relative">
-            <PhoneMockup label="Skjermbilde 1" />
-          </div>
         </div>
-      </section>
+      </div>
 
-      {/* Feature 1: Skann og sjekk */}
-      <section className="py-section px-container bg-surface">
-        <div className="max-w-page mx-auto grid md:grid-cols-2 gap-gap-section items-center">
-          <div>
-            <h2 className="text-3xl font-bold mb-mb-heading text-text-primary">
-              Skann og sjekk
-            </h2>
-            <p className="text-lg text-text-secondary">
-              Skann strekkoden på et produkt og få umiddelbar oversikt over NOVA-score, Nutri-Score, og alle tilsetningsstoffer. Vit hva du spiser.
-            </p>
-          </div>
-          <PhoneMockup label="Skjermbilde 2" variant="dark" />
+      {/* Footer */}
+      <footer className="absolute bottom-8 left-0 right-0 text-center animate-fade-up animate-delay-5">
+        <div className="flex items-center justify-center gap-6 text-sm text-text-muted">
+          <Link
+            href="/personvern"
+            className="hover:text-primary transition-colors duration-default"
+          >
+            Personvern
+          </Link>
+          <span className="text-border">•</span>
+          <Link
+            href="/vilkar"
+            className="hover:text-primary transition-colors duration-default"
+          >
+            Vilkår
+          </Link>
         </div>
-      </section>
-
-      {/* Feature 2: Finn sunnere alternativer */}
-      <section className="py-section px-container">
-        <div className="max-w-page mx-auto grid md:grid-cols-2 gap-gap-section items-center">
-          <div className="order-2 md:order-1">
-            <PhoneMockup label="Skjermbilde 3" />
-          </div>
-          <div className="order-1 md:order-2">
-            <h2 className="text-3xl font-bold mb-mb-heading text-text-primary">
-              Finn sunnere alternativer
-            </h2>
-            <p className="text-lg text-text-secondary">
-              Oppdaget du et ultraprosessert produkt? Matlosen foreslår renere alternativer fra samme kategori, så du enkelt kan bytte til bedre valg.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Feature 3: Oppskrifter uten UPF */}
-      <section className="py-section px-container bg-surface">
-        <div className="max-w-page mx-auto grid md:grid-cols-2 gap-gap-section items-center">
-          <div>
-            <h2 className="text-3xl font-bold mb-mb-heading text-text-primary">
-              Oppskrifter uten UPF
-            </h2>
-            <p className="text-lg text-text-secondary">
-              Utforsk hundrevis av oppskrifter laget med rene råvarer. Planlegg ukens måltider og generer handlelister automatisk.
-            </p>
-          </div>
-          <PhoneMockup label="Skjermbilde 4" variant="dark" />
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-section px-container text-center">
-        <h2 className="text-3xl font-bold mb-mb-heading-lg text-text-primary">
-          Klar til å spise renere?
-        </h2>
-        <AppStoreButton />
-      </section>
-
-      <Footer />
+        <p className="text-xs text-text-muted mt-3">
+          © 2025 Matlosen
+        </p>
+      </footer>
     </main>
   )
 }
