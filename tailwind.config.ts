@@ -1,5 +1,16 @@
 import type { Config } from 'tailwindcss'
-import { colors, typography, spacing, layout, borderRadius, shadows } from './lib/theme'
+import {
+  colors,
+  opacity,
+  typography,
+  semanticSpacing,
+  layout,
+  borderRadius,
+  shadows,
+  transitions,
+  blur,
+  componentSizes,
+} from './lib/theme'
 
 const config: Config = {
   content: [
@@ -8,6 +19,7 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // Colors
       colors: {
         primary: colors.primary,
         background: colors.background,
@@ -16,29 +28,56 @@ const config: Config = {
         border: colors.border,
         placeholder: colors.placeholder,
       },
+
+      // Opacity
+      opacity: opacity,
+
+      // Typography
       fontFamily: typography.fontFamily,
-      spacing: {
-        'section': spacing[20],
-        'section-sm': spacing[16],
-        'container': spacing[6],
-        'hero-top': spacing[32],
-      },
-      maxWidth: {
-        'page': layout.container['5xl'],
-        'content': layout.container['3xl'],
-        'phone': layout.container.xs,
-      },
+
+      // Spacing - semantic tokens
+      spacing: semanticSpacing,
+
+      // Layout
+      maxWidth: layout.maxWidth,
+      zIndex: layout.zIndex,
+
+      // Border radius
       borderRadius: {
-        'xl': borderRadius.xl,
-        '2xl': borderRadius['2xl'],
-        '3xl': borderRadius['3xl'],
+        'icon': borderRadius.icon,
+        'card': borderRadius.card,
+        'button': borderRadius.button,
         'phone': borderRadius.phone,
-        'phone-screen': borderRadius.phoneScreen,
+        'phone-screen': borderRadius['phone-screen'],
       },
-      zIndex: {
-        'header': layout.zIndex.header,
+
+      // Shadows
+      boxShadow: {
+        'card': shadows.card,
+        'phone': shadows.phone,
       },
-      boxShadow: shadows,
+
+      // Transitions
+      transitionDuration: {
+        'fast': transitions.duration.fast,
+        'default': transitions.duration.DEFAULT,
+        'slow': transitions.duration.slow,
+      },
+      transitionTimingFunction: {
+        'default': transitions.timing.DEFAULT,
+        'in': transitions.timing.in,
+        'out': transitions.timing.out,
+        'in-out': transitions.timing.inOut,
+      },
+
+      // Blur
+      blur: {
+        'header': blur.header,
+      },
+
+      // Component sizes
+      width: componentSizes,
+      height: componentSizes,
     },
   },
   plugins: [],

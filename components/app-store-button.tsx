@@ -13,7 +13,7 @@ export function AppStoreButton() {
         alt="Last ned Matlosen på App Store"
         width={180}
         height={60}
-        className="hover:opacity-80 transition-opacity"
+        className="hover:opacity-80 transition-opacity duration-default"
       />
     </a>
   )

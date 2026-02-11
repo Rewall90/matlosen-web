@@ -1,7 +1,14 @@
 /**
  * Matlosen Design Token System
  * Single source of truth for all visual styling.
- * These tokens are used by Tailwind CSS config and can be imported directly.
+ *
+ * USAGE: Always use semantic tokens when creating components.
+ * - Use `py-section` not `py-20`
+ * - Use `max-w-page` not `max-w-5xl`
+ * - Use `text-text-primary` not hardcoded colors
+ * - Use `duration-default` not `duration-200`
+ *
+ * See CLAUDE.md for complete token usage guidelines.
  */
 
 // =============================================================================
@@ -44,6 +51,25 @@ export const colors = {
 } as const
 
 // =============================================================================
+// OPACITY
+// =============================================================================
+
+export const opacity = {
+  0: '0',
+  5: '0.05',
+  10: '0.1',       // Subtle backgrounds (bg-primary/10)
+  20: '0.2',
+  30: '0.3',
+  40: '0.4',
+  50: '0.5',
+  60: '0.6',
+  70: '0.7',
+  80: '0.8',       // Hover states, glass effects
+  90: '0.9',
+  100: '1',
+} as const
+
+// =============================================================================
 // TYPOGRAPHY
 // =============================================================================
 
@@ -76,8 +102,8 @@ export const typography = {
 // SPACING
 // =============================================================================
 
+// Base spacing scale
 export const spacing = {
-  // Base spacing scale (rem)
   px: '1px',
   0: '0',
   0.5: '0.125rem',  // 2px
@@ -88,14 +114,40 @@ export const spacing = {
   3: '0.75rem',     // 12px
   4: '1rem',        // 16px
   5: '1.25rem',     // 20px
-  6: '1.5rem',      // 24px - container padding
+  6: '1.5rem',      // 24px
   8: '2rem',        // 32px
   10: '2.5rem',     // 40px
-  12: '3rem',       // 48px - section gap
+  12: '3rem',       // 48px
   16: '4rem',       // 64px
-  20: '5rem',       // 80px - section padding
+  20: '5rem',       // 80px
   24: '6rem',       // 96px
-  32: '8rem',       // 128px - hero top padding
+  32: '8rem',       // 128px
+} as const
+
+// Semantic spacing - USE THESE in components
+export const semanticSpacing = {
+  // Layout
+  'container': spacing[6],      // Horizontal page padding (24px)
+  'section': spacing[20],       // Vertical section padding (80px)
+  'section-sm': spacing[16],    // Smaller section padding (64px)
+  'hero-top': spacing[32],      // Hero section top padding (128px)
+  'footer': spacing[8],         // Footer vertical padding (32px)
+
+  // Content gaps
+  'gap-section': spacing[12],   // Gap between section items (48px)
+  'gap-content': spacing[8],    // Gap between content blocks (32px)
+  'gap-items': spacing[4],      // Gap between small items (16px)
+
+  // Text rhythm
+  'mb-heading': spacing[4],     // Margin below headings (16px)
+  'mb-heading-lg': spacing[6],  // Margin below large headings (24px)
+  'mb-body': spacing[10],       // Margin below body text (40px)
+  'mb-element': spacing[8],     // Margin below UI elements (32px)
+
+  // Component internal
+  'p-card': spacing[4],         // Card padding (16px)
+  'p-button-x': spacing[5],     // Button horizontal padding (20px)
+  'p-button-y': spacing[2.5],   // Button vertical padding (10px)
 } as const
 
 // =============================================================================
@@ -103,17 +155,12 @@ export const spacing = {
 // =============================================================================
 
 export const layout = {
-  // Container max widths
-  container: {
-    xs: '20rem',    // 320px - phone mockup
-    sm: '24rem',    // 384px
-    md: '28rem',    // 448px
-    lg: '32rem',    // 512px
-    xl: '36rem',    // 576px
-    '2xl': '42rem', // 672px
-    '3xl': '48rem', // 768px - content width
-    '4xl': '56rem', // 896px
-    '5xl': '64rem', // 1024px - max page width
+  // Container max widths - USE THESE semantic names
+  maxWidth: {
+    'page': '64rem',      // 1024px - max page width
+    'content': '48rem',   // 768px - content width (articles, hero)
+    'narrow': '36rem',    // 576px - narrow content
+    'phone': '20rem',     // 320px - phone mockup width
   },
 
   // Z-index scale
@@ -134,16 +181,20 @@ export const layout = {
 
 export const borderRadius = {
   none: '0',
-  sm: '0.125rem',   // 2px
-  DEFAULT: '0.25rem', // 4px
-  md: '0.375rem',   // 6px
-  lg: '0.5rem',     // 8px
-  xl: '0.75rem',    // 12px - icon container
-  '2xl': '1rem',    // 16px
-  '3xl': '1.5rem',  // 24px - app icon
-  phone: '3rem',    // 48px - phone mockup outer
-  phoneScreen: '2.5rem', // 40px - phone mockup screen
-  full: '9999px',   // pill/button
+  sm: '0.125rem',       // 2px
+  DEFAULT: '0.25rem',   // 4px
+  md: '0.375rem',       // 6px
+  lg: '0.5rem',         // 8px
+  xl: '0.75rem',        // 12px
+  '2xl': '1rem',        // 16px
+  '3xl': '1.5rem',      // 24px
+
+  // Semantic radius
+  'icon': '0.75rem',          // Icon containers (12px)
+  'card': '1rem',             // Cards (16px)
+  'button': '9999px',         // Pill buttons
+  'phone': '3rem',            // Phone mockup outer (48px)
+  'phone-screen': '2.5rem',   // Phone mockup screen (40px)
 } as const
 
 // =============================================================================
@@ -157,6 +208,10 @@ export const shadows = {
   md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
   lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
   xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+
+  // Semantic shadows
+  'card': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+  'phone': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
 } as const
 
 // =============================================================================
@@ -179,6 +234,22 @@ export const transitions = {
 } as const
 
 // =============================================================================
+// BLUR
+// =============================================================================
+
+export const blur = {
+  none: '0',
+  sm: '4px',
+  DEFAULT: '8px',
+  md: '12px',
+  lg: '16px',
+  xl: '24px',
+
+  // Semantic blur
+  'header': '12px',   // Header backdrop blur
+} as const
+
+// =============================================================================
 // BREAKPOINTS
 // =============================================================================
 
@@ -191,38 +262,17 @@ export const breakpoints = {
 } as const
 
 // =============================================================================
-// COMPONENT TOKENS
+// COMPONENT SIZES
 // =============================================================================
 
-export const components = {
-  // Header
-  header: {
-    height: '4.5rem', // 72px
-    blur: 'blur(12px)',
-  },
+export const componentSizes = {
+  // Icon containers
+  'icon-sm': '2.5rem',    // 40px
+  'icon-md': '3rem',      // 48px
+  'icon-lg': '6rem',      // 96px - hero app icon
 
-  // Button
-  button: {
-    paddingX: spacing[5],
-    paddingY: spacing[2.5],
-    borderRadius: borderRadius.full,
-  },
-
-  // Phone mockup
-  phoneMockup: {
-    maxWidth: layout.container.xs,
-    padding: spacing[4],
-    borderRadius: borderRadius.phone,
-    screenBorderRadius: borderRadius.phoneScreen,
-    aspectRatio: '9/19',
-  },
-
-  // Section
-  section: {
-    paddingY: spacing[20],
-    paddingX: spacing[6],
-    gap: spacing[12],
-  },
+  // Logo
+  'logo': '2.5rem',       // 40px - header logo
 } as const
 
 // =============================================================================
@@ -231,14 +281,17 @@ export const components = {
 
 export const theme = {
   colors,
+  opacity,
   typography,
   spacing,
+  semanticSpacing,
   layout,
   borderRadius,
   shadows,
   transitions,
+  blur,
   breakpoints,
-  components,
+  componentSizes,
 } as const
 
 export type Theme = typeof theme
