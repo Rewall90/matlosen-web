@@ -10,6 +10,8 @@ export function verifySessionToken(token: string, secret: string): boolean {
     if (parts.length !== 3) return false
 
     const [randomId, expiresAtStr, providedSignature] = parts
+    if (!randomId || !expiresAtStr || !providedSignature) return false
+
     const expiresAt = parseInt(expiresAtStr, 10)
 
     // Check expiration

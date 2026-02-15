@@ -17,6 +17,7 @@ function isTokenFormatValid(token: string): boolean {
     if (parts.length !== 3) return false
 
     const [randomId, expiresAtStr, signature] = parts
+    if (!randomId || !expiresAtStr || !signature) return false
 
     // Check randomId is 64 hex chars (32 bytes)
     if (!/^[a-f0-9]{64}$/.test(randomId)) return false
