@@ -2,8 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Primary color exposed as CSS custom property for complex gradients */
+  --color-primary: #2a9d8f;
+}
+
 body {
   @apply bg-background text-text-primary;
+}
+
+/* =============================================================================
+   GRADIENT GLOW EFFECT
+   Uses CSS custom property to reference primary color from design tokens
+   ============================================================================= */
+
+.gradient-glow {
+  background: radial-gradient(
+    circle,
+    rgba(42, 157, 143, 0.4) 0%,
+    rgba(42, 157, 143, 0.1) 50%,
+    transparent 70%
+  );
 }
 
 /* =============================================================================
@@ -64,33 +83,14 @@ body {
 }
 
 /* =============================================================================
-   ACCESSIBILITY - Reduced Motion
+   ACCESSIBILITY - REDUCED MOTION
    ============================================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-up {
-    animation: none;
-    opacity: 1;
-  }
-
-  .animate-glow {
-    animation: none;
-  }
-
+  .animate-fade-up,
+  .animate-glow,
   .animate-float {
-    animation: none;
+    animation: none !important;
+    opacity: 1 !important;
   }
-}
-
-/* =============================================================================
-   CUSTOM PROPERTIES - Using design tokens
-   ============================================================================= */
-
-:root {
-  --glow-gradient: radial-gradient(
-    circle,
-    rgb(42 157 143 / 0.4) 0%,
-    rgb(42 157 143 / 0.1) 50%,
-    transparent 70%
-  );
 }

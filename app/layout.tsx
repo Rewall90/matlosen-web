@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'Matlosen - Spis renere. Lev bedre.',
-    description: 'Matlosen hjelper deg å finne ren mat uten ultraprosesserte tilsetningsstoffer.',
+    description: 'Skann produkter og finn ut hva du spiser. Last ned gratis for iOS.',
   },
 }
 
@@ -35,7 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="nb" className={outfit.variable}>
-      <body className="font-sans antialiased">
+      <body className={`${outfit.className} antialiased`}>
         {children}
       </body>
     </html>

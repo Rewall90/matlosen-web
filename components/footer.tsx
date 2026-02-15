@@ -9,11 +9,12 @@ export function Footer({ activeLink }: FooterProps) {
     <footer className="py-footer px-container border-t border-border">
       <div className="max-w-page mx-auto flex flex-col md:flex-row items-center justify-between gap-gap-items">
         <p className="text-text-muted text-sm">
-          © 2025 Matlosen. Alle rettigheter reservert.
+          © {new Date().getFullYear()} Matlosen. Alle rettigheter reservert.
         </p>
-        <div className="flex gap-gap-links">
+        <div className="flex gap-gap-items">
           <Link
             href="/personvern"
+            aria-current={activeLink === 'personvern' ? 'page' : undefined}
             className={
               activeLink === 'personvern'
                 ? 'text-primary text-sm font-medium'
@@ -24,6 +25,7 @@ export function Footer({ activeLink }: FooterProps) {
           </Link>
           <Link
             href="/vilkar"
+            aria-current={activeLink === 'vilkar' ? 'page' : undefined}
             className={
               activeLink === 'vilkar'
                 ? 'text-primary text-sm font-medium'

@@ -6,8 +6,8 @@ export function AppStoreButton() {
       href="https://apps.apple.com/app/matlosen"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Last ned Matlosen på App Store (åpner i nytt vindu)"
-      className="inline-block"
+      aria-label="Last ned Matlosen på App Store (åpnes i ny fane)"
+      className="inline-block focus-visible:opacity-80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
     >
       <Image
         src="/app-store-badge.svg"
