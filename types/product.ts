@@ -51,6 +51,7 @@ export type Product = {
   submitted_by: string | null
   reviewed_by: string | null
   reviewed_at: string | null
+  rejection_reason: string | null
   ai_raw_response: Record<string, unknown> | null
 }
 

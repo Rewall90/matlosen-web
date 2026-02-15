@@ -1,19 +1,33 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { updateProduct, approveProduct, deleteProduct } from '@/lib/api/products'
+import {
+  updateProduct,
+  approveProduct,
+  rejectProduct,
+  updateProductCategory,
+  reExtractAdditives,
+} from '@/lib/api/products'
+import { validateProduct, hasBlockingErrors } from '@/lib/validation/product-warnings'
+import { ValidationWarnings } from '@/components/admin/validation-warnings'
+import { CategorySelector } from '@/components/admin/category-selector'
+import { ImageUploader } from '@/components/admin/image-uploader'
+import { RejectDialog } from '@/components/admin/reject-dialog'
 import type { Product, NovaScore, NutriScore } from '@/types/product'
 
 type Props = {
   product: Product
+  categoryName?: string | null
 }
 
-export function ProductReviewForm({ product }: Props) {
+export function ProductReviewForm({ product, categoryName }: Props) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [extracting, setExtracting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [extractionResult, setExtractionResult] = useState<{ count: number } | null>(null)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -37,7 +51,12 @@ export function ProductReviewForm({ product }: Props) {
     package_size: product.package_size,
     package_unit: product.package_unit || '',
     image_url: product.image_url || '',
+    category_id: product.category_id || null,
   })
+
+  // Compute validation warnings
+  const warnings = useMemo(() => validateProduct(formData), [formData])
+  const hasErrors = useMemo(() => hasBlockingErrors(formData), [formData])
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -67,6 +86,10 @@ export function ProductReviewForm({ product }: Props) {
         nova_score: formData.nova_score as NovaScore | null,
         nutri_score: formData.nutri_score as NutriScore | null,
       })
+      // Also update category if changed
+      if (formData.category_id !== product.category_id) {
+        await updateProductCategory(product.gtin, formData.category_id)
+      }
       setSuccess('Product saved successfully')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to save')
@@ -76,6 +99,11 @@ export function ProductReviewForm({ product }: Props) {
   }
 
   async function handleApprove() {
+    if (hasErrors) {
+      setError('Please fix all errors before approving')
+      return
+    }
+
     if (!confirm('Are you sure you want to approve this product?')) return
 
     setLoading(true)
@@ -88,6 +116,10 @@ export function ProductReviewForm({ product }: Props) {
         nova_score: formData.nova_score as NovaScore | null,
         nutri_score: formData.nutri_score as NutriScore | null,
       })
+      // Update category if changed
+      if (formData.category_id !== product.category_id) {
+        await updateProductCategory(product.gtin, formData.category_id)
+      }
       // Then approve
       await approveProduct(product.gtin)
       router.push('/admin')
@@ -98,24 +130,51 @@ export function ProductReviewForm({ product }: Props) {
     }
   }
 
-  async function handleDelete() {
-    if (!confirm('Are you sure you want to DELETE this product? This cannot be undone.')) return
-
+  async function handleReject(reason: string) {
     setLoading(true)
     setError('')
 
     try {
-      await deleteProduct(product.gtin)
+      await rejectProduct(product.gtin, reason)
       router.push('/admin')
       router.refresh()
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to delete')
+      setError(e instanceof Error ? e.message : 'Failed to reject')
       setLoading(false)
+    }
+  }
+
+  async function handleReExtract() {
+    if (!formData.ingredients_raw) {
+      setError('No ingredients to extract from')
+      return
+    }
+
+    setExtracting(true)
+    setError('')
+    setExtractionResult(null)
+
+    try {
+      // First save the current ingredients
+      await updateProduct(product.gtin, {
+        ingredients_raw: formData.ingredients_raw,
+      })
+      // Then re-extract
+      const result = await reExtractAdditives(product.gtin)
+      setExtractionResult(result)
+      setSuccess(`Extracted ${result.count} additives`)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to extract additives')
+    } finally {
+      setExtracting(false)
     }
   }
 
   return (
     <div className="space-y-8">
+      {/* Validation Warnings */}
+      <ValidationWarnings warnings={warnings} />
+
       {/* Status messages */}
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
@@ -145,19 +204,11 @@ export function ProductReviewForm({ product }: Props) {
         <h2 className="text-lg font-medium text-text-primary mb-4">Product Image</h2>
 
         <div className="flex gap-6">
-          <div className="w-40 h-40 bg-surface rounded-lg overflow-hidden flex-shrink-0">
-            {formData.image_url ? (
-              <img
-                src={formData.image_url}
-                alt={formData.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-text-muted">
-                No image
-              </div>
-            )}
-          </div>
+          <ImageUploader
+            gtin={product.gtin}
+            currentUrl={formData.image_url || null}
+            onUpload={(url) => setFormData((prev) => ({ ...prev, image_url: url }))}
+          />
 
           <div className="flex-1">
             <label className="block text-sm font-medium text-text-secondary mb-2">
@@ -172,7 +223,7 @@ export function ProductReviewForm({ product }: Props) {
               placeholder="https://..."
             />
             <p className="text-xs text-text-muted mt-2">
-              Enter a URL or upload to Supabase Storage and paste the URL here.
+              Upload an image or enter a URL manually.
             </p>
           </div>
         </div>
@@ -223,6 +274,15 @@ export function ProductReviewForm({ product }: Props) {
             />
           </div>
 
+          {/* Category Selector */}
+          <div className="col-span-2">
+            <CategorySelector
+              value={formData.category_id}
+              onChange={(categoryId) => setFormData((prev) => ({ ...prev, category_id: categoryId }))}
+              initialCategoryName={categoryName}
+            />
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2">
               Origin Country
@@ -268,7 +328,24 @@ export function ProductReviewForm({ product }: Props) {
 
       {/* Ingredients */}
       <section className="bg-surface-elevated p-6 rounded-card shadow-card">
-        <h2 className="text-lg font-medium text-text-primary mb-4">Ingredients</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium text-text-primary">Ingredients</h2>
+          <div className="flex items-center gap-3">
+            {extractionResult && (
+              <span className="text-sm text-green-600">
+                Found {extractionResult.count} additives
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={handleReExtract}
+              disabled={extracting || !formData.ingredients_raw}
+              className="px-3 py-1.5 text-sm bg-surface border border-border rounded-lg hover:bg-surface-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {extracting ? 'Extracting...' : 'Re-extract Additives'}
+            </button>
+          </div>
+        </div>
 
         <textarea
           name="ingredients_raw"
@@ -470,14 +547,7 @@ export function ProductReviewForm({ product }: Props) {
 
       {/* Actions */}
       <div className="flex items-center justify-between pt-4">
-        <button
-          type="button"
-          onClick={handleDelete}
-          disabled={loading}
-          className="px-5 py-2.5 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-button transition-colors disabled:opacity-50"
-        >
-          Delete Product
-        </button>
+        <RejectDialog onReject={handleReject} loading={loading} />
 
         <div className="flex items-center gap-4">
           <button
@@ -492,8 +562,9 @@ export function ProductReviewForm({ product }: Props) {
           <button
             type="button"
             onClick={handleApprove}
-            disabled={loading}
-            className="px-5 py-2.5 bg-primary text-text-inverse font-medium rounded-button hover:bg-primary-dark transition-colors disabled:opacity-50"
+            disabled={loading || hasErrors}
+            title={hasErrors ? 'Fix all errors before approving' : ''}
+            className="px-5 py-2.5 bg-primary text-text-inverse font-medium rounded-button hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Processing...' : 'Save & Approve'}
           </button>

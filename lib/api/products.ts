@@ -10,11 +10,13 @@ import type { PendingProduct, Product } from '@/types/product'
 // =============================================================================
 
 const gtinSchema = z.string().regex(/^\d{8,14}$/, 'Invalid GTIN format')
+const rejectionReasonSchema = z.string().min(1, 'Reason is required').max(1000)
 
 const productUpdateSchema = z.object({
   name: z.string().min(1, 'Name is required').max(500).optional(),
   brand: z.string().max(200).nullable().optional(),
   generic_name: z.string().max(500).nullable().optional(),
+  category_id: z.string().max(100).nullable().optional(),
   ingredients_raw: z.string().max(5000).nullable().optional(),
   nova_score: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]).nullable().optional(),
   nutri_score: z.enum(['A', 'B', 'C', 'D', 'E']).nullable().optional(),
@@ -163,6 +165,39 @@ export async function approveProduct(gtin: string): Promise<void> {
 }
 
 /**
+ * Reject a product with a reason
+ */
+export async function rejectProduct(gtin: string, reason: string): Promise<void> {
+  await requireAuth()
+
+  // Validate inputs
+  const validatedGtin = gtinSchema.parse(gtin)
+  const validatedReason = rejectionReasonSchema.parse(reason)
+
+  const supabase = createAdminClient()
+
+  const { error, data: updatedRows } = await supabase
+    .from('products')
+    .update({
+      status: 'rejected',
+      rejection_reason: validatedReason,
+      reviewed_by: null, // Password auth - no user UUID available
+      reviewed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('gtin', validatedGtin)
+    .select('gtin')
+
+  if (error) {
+    throw new Error(`Failed to reject product: ${error.message}`)
+  }
+
+  if (!updatedRows || updatedRows.length === 0) {
+    throw new Error(`Product not found: ${validatedGtin}`)
+  }
+}
+
+/**
  * Delete a product (remove entirely)
  */
 export async function deleteProduct(gtin: string): Promise<void> {
@@ -243,4 +278,185 @@ export async function uploadProductImage(gtin: string, file: File): Promise<stri
     .getPublicUrl(path)
 
   return urlData.publicUrl
+}
+
+// =============================================================================
+// CATEGORY FUNCTIONS
+// =============================================================================
+
+export type Category = {
+  id: string
+  name_no: string
+  parent_id: string | null
+}
+
+/**
+ * Get all leaf categories (categories that can be assigned to products)
+ * Leaf categories have a parent_id (they are subcategories)
+ */
+export async function getLeafCategories(): Promise<Category[]> {
+  await requireAuth()
+
+  const supabase = createAdminClient()
+
+  const { data, error } = await supabase
+    .from('categories')
+    .select('id, name_no, parent_id')
+    .not('parent_id', 'is', null) // Only leaf categories
+    .order('name_no')
+
+  if (error) {
+    throw new Error(`Failed to fetch categories: ${error.message}`)
+  }
+
+  return data as Category[]
+}
+
+/**
+ * Escape special characters for LIKE/ILIKE patterns
+ */
+function escapeLikePattern(str: string): string {
+  return str.replace(/[%_\\]/g, '\\$&')
+}
+
+/**
+ * Search categories by name
+ */
+export async function searchCategories(query: string, limit = 20): Promise<Category[]> {
+  await requireAuth()
+
+  if (!query.trim()) return []
+
+  const supabase = createAdminClient()
+
+  // Escape special LIKE characters to prevent pattern injection
+  const escapedQuery = escapeLikePattern(query.trim())
+
+  const { data, error } = await supabase
+    .from('categories')
+    .select('id, name_no, parent_id')
+    .not('parent_id', 'is', null) // Only leaf categories
+    .ilike('name_no', `%${escapedQuery}%`)
+    .order('name_no')
+    .limit(limit)
+
+  if (error) {
+    throw new Error(`Failed to search categories: ${error.message}`)
+  }
+
+  return data as Category[]
+}
+
+/**
+ * Update product category
+ */
+export async function updateProductCategory(
+  gtin: string,
+  categoryId: string | null
+): Promise<void> {
+  await requireAuth()
+
+  const validatedGtin = gtinSchema.parse(gtin)
+  const supabase = createAdminClient()
+
+  // Validate category exists if provided
+  if (categoryId) {
+    const { data: categoryExists, error: catError } = await supabase
+      .from('categories')
+      .select('id')
+      .eq('id', categoryId)
+      .single()
+
+    if (catError || !categoryExists) {
+      throw new Error(`Category not found: ${categoryId}`)
+    }
+  }
+
+  const { error, data: updatedRows } = await supabase
+    .from('products')
+    .update({
+      category_id: categoryId,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('gtin', validatedGtin)
+    .select('gtin')
+
+  if (error) {
+    throw new Error(`Failed to update category: ${error.message}`)
+  }
+
+  if (!updatedRows || updatedRows.length === 0) {
+    throw new Error(`Product not found: ${validatedGtin}`)
+  }
+}
+
+// =============================================================================
+// ADDITIVE EXTRACTION
+// =============================================================================
+
+/**
+ * Re-extract additives from a product's ingredients
+ * Used when admin edits ingredients_raw and wants to re-run extraction
+ */
+export async function reExtractAdditives(gtin: string): Promise<{ count: number }> {
+  await requireAuth()
+
+  const validatedGtin = gtinSchema.parse(gtin)
+  const supabase = createAdminClient()
+
+  // Get product's current ingredients_raw
+  const { data: product, error: productError } = await supabase
+    .from('products')
+    .select('ingredients_raw')
+    .eq('gtin', validatedGtin)
+    .single()
+
+  if (productError || !product) {
+    throw new Error(`Product not found: ${validatedGtin}`)
+  }
+
+  if (!product.ingredients_raw) {
+    throw new Error('Product has no ingredients to extract from')
+  }
+
+  // Delete existing additives for this product
+  await supabase
+    .from('product_additives')
+    .delete()
+    .eq('product_gtin', validatedGtin)
+
+  // Call the extraction RPC function
+  const { data: extractionResult, error: extractError } = await supabase
+    .rpc('extract_additives_from_ingredients', {
+      p_gtin: validatedGtin,
+      p_ingredients: product.ingredients_raw,
+    })
+
+  if (extractError) {
+    // If RPC doesn't exist, try direct matching approach
+    console.warn('RPC extract_additives_from_ingredients not found, using fallback')
+
+    // Fallback: simple E-number regex extraction
+    const eNumberRegex = /[eE]\s*(\d{3,4}[a-z]?)/g
+    const matches = product.ingredients_raw.match(eNumberRegex) || []
+    const normalizedMatches = matches.map((m: string) => m.toLowerCase().replace(/\s/g, ''))
+    const uniqueENumbers = Array.from(new Set<string>(normalizedMatches))
+
+    // Insert found E-numbers
+    if (uniqueENumbers.length > 0) {
+      const inserts = uniqueENumbers.map(eNum => ({
+        product_gtin: validatedGtin,
+        additive_id: eNum.replace('e', 'e'), // normalize to lowercase e
+      }))
+
+      // Try to insert (will fail silently if additive doesn't exist in table)
+      await supabase
+        .from('product_additives')
+        .upsert(inserts, { onConflict: 'product_gtin,additive_id', ignoreDuplicates: true })
+    }
+
+    return { count: uniqueENumbers.length }
+  }
+
+  return { count: extractionResult?.count ?? 0 }
 }
