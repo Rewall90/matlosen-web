@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import Image from 'next/image'
 import { uploadProductImage } from '@/lib/api/products'
 
 type Props = {
@@ -70,12 +71,14 @@ export function ImageUploader({ gtin, currentUrl, onUpload }: Props) {
   return (
     <div className="space-y-4">
       {/* Preview */}
-      <div className="w-40 h-40 bg-surface rounded-lg overflow-hidden border border-border">
+      <div className="w-40 h-40 bg-surface rounded-lg overflow-hidden border border-border relative">
         {currentUrl ? (
-          <img
+          <Image
             src={currentUrl}
             alt="Product"
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            sizes="160px"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-text-muted">

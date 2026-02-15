@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { getPendingProducts } from '@/lib/api/products'
 import type { PendingProduct } from '@/types/product'
 
@@ -45,12 +46,14 @@ function ProductCard({ product }: { product: PendingProduct }) {
     >
       <div className="flex gap-4">
         {/* Product image */}
-        <div className="w-20 h-20 bg-surface rounded-lg flex-shrink-0 overflow-hidden">
+        <div className="w-20 h-20 bg-surface rounded-lg flex-shrink-0 overflow-hidden relative">
           {product.image_url ? (
-            <img
+            <Image
               src={product.image_url}
               alt={product.name}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="80px"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-text-muted text-xs">
