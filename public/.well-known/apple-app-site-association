@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "4926LRKFPT.com.matlosen.app",
+        "paths": ["/l/*"]
+      }
+    ]
+  }
+}
