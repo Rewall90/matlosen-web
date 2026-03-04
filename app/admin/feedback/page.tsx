@@ -33,21 +33,23 @@ function StatusBadge({ status }: { status: FeedbackStatus }) {
 // =============================================================================
 
 function FeedbackCard({ item }: { item: FeedbackItem }) {
+  const itemId = item.id
+
   async function handleResolve() {
     'use server'
-    await updateFeedbackStatus(item.id, 'resolved')
+    await updateFeedbackStatus(itemId, 'resolved')
     revalidatePath('/admin/feedback')
   }
 
   async function handleDismiss() {
     'use server'
-    await updateFeedbackStatus(item.id, 'dismissed')
+    await updateFeedbackStatus(itemId, 'dismissed')
     revalidatePath('/admin/feedback')
   }
 
   async function handleReopen() {
     'use server'
-    await updateFeedbackStatus(item.id, 'pending')
+    await updateFeedbackStatus(itemId, 'pending')
     revalidatePath('/admin/feedback')
   }
 
@@ -187,7 +189,10 @@ export default async function FeedbackPage({
   searchParams: Promise<{ status?: string }>
 }) {
   const params = await searchParams
-  const statusFilter = params.status as FeedbackStatus | undefined
+  const validStatuses: FeedbackStatus[] = ['pending', 'resolved', 'dismissed']
+  const statusFilter = params.status && validStatuses.includes(params.status as FeedbackStatus)
+    ? (params.status as FeedbackStatus)
+    : undefined
 
   let feedbackItems: FeedbackItem[] = []
   let error: string | null = null
