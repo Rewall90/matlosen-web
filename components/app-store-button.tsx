@@ -10,10 +10,10 @@ export function AppStoreButton() {
       className="inline-block focus-visible:opacity-80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
     >
       <Image
-        src="/app-store-badge.svg"
+        src="/app-store-badge.png"
         alt="Last ned Matlosen på App Store"
         width={180}
-        height={60}
+        height={54}
         className="hover:opacity-80 transition-opacity duration-default"
       />
     </a>

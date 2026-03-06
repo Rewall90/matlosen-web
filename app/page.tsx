@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { AppStoreButton } from '@/components'
 
@@ -20,9 +21,7 @@ export default function Home() {
       <div className="relative z-10 text-center max-w-narrow">
         {/* App Icon */}
         <div className="animate-fade-up animate-delay-1">
-          <div className="w-icon-lg h-icon-lg bg-primary rounded-3xl mx-auto mb-mb-heading-lg flex items-center justify-center shadow-lg animate-float">
-            <span className="text-white font-bold text-4xl">M</span>
-          </div>
+          <Image src="/logo.png" alt="Matlosen logo" width={80} height={80} className="mx-auto mb-mb-heading-lg animate-float" />
         </div>
 
         {/* App Name */}
