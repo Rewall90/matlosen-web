@@ -21,6 +21,10 @@ export const metadata: Metadata = {
     locale: 'nb_NO',
     type: 'website',
   },
+  icons: {
+    icon: '/favicon.png',
+    apple: '/apple-touch-icon.png',
+  },
   twitter: {
     card: 'summary',
     title: 'Matlosen - Spis renere. Lev bedre.',
