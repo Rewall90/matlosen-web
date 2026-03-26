@@ -6,6 +6,7 @@ import {
   updateProduct,
   approveProduct,
   rejectProduct,
+  deleteProduct,
   updateProductCategory,
   reExtractAdditives,
 } from '@/lib/api/products'
@@ -140,6 +141,22 @@ export function ProductReviewForm({ product, categoryName }: Props) {
       router.refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to reject')
+      setLoading(false)
+    }
+  }
+
+  async function handleDelete() {
+    if (!confirm('Are you sure you want to permanently delete this product? This cannot be undone.')) return
+
+    setLoading(true)
+    setError('')
+
+    try {
+      await deleteProduct(product.gtin)
+      router.push('/admin')
+      router.refresh()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to delete')
       setLoading(false)
     }
   }
@@ -547,7 +564,17 @@ export function ProductReviewForm({ product, categoryName }: Props) {
 
       {/* Actions */}
       <div className="flex items-center justify-between pt-4">
-        <RejectDialog onReject={handleReject} loading={loading} />
+        <div className="flex items-center gap-3">
+          <RejectDialog onReject={handleReject} loading={loading} />
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={loading}
+            className="px-5 py-2.5 text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200 rounded-button transition-colors disabled:opacity-50"
+          >
+            {loading ? 'Deleting...' : 'Delete'}
+          </button>
+        </div>
 
         <div className="flex items-center gap-4">
           <button
