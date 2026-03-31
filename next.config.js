@@ -10,6 +10,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/tt',
+        destination: 'https://apps.apple.com/no/app/matlosen/id6760171612?l=nb&ct=tiktok&mt=8',
+        permanent: true,
+      },
+    ]
+  },
   async headers() {
     return [
       {
